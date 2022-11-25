@@ -14,8 +14,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val CITY: String = "paris,fr"
-    val API: String = "f01e80368f05c66b03425d3f08ab1a1c" // Use API key
+    // untuk mengganti negara dan api key cukup disini
+    val COUNTRY: String = "paris,fr"
+    val API: String =
+        "f197b40f92b8c81d103e37da74555e8d" // dapat ketika kita login di openweathermap.org dan mengenerate api key
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +30,17 @@ class MainActivity : AppCompatActivity() {
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
             super.onPreExecute()
-            /* Showing the ProgressBar, Making the main design GONE */
             findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
             findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
             findViewById<TextView>(R.id.errorText).visibility = View.GONE
         }
 
         override fun doInBackground(vararg params: String?): String? {
+            // untuk menampung url dari openweathermap dan API key
             var response: String?
             try {
                 response =
-                    URL("https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API").readText(
+                    URL("https://api.openweathermap.org/data/2.5/weather?q=$COUNTRY&units=metric&appid=$API").readText(
                         Charsets.UTF_8
                     )
             } catch (e: Exception) {
@@ -47,10 +49,11 @@ class MainActivity : AppCompatActivity() {
             return response
         }
 
+        // template dari openweathermap akan menampilkan angin, suhu, kelembaban, dan lainnya
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             try {
-                 val jsonObj = JSONObject(result)
+                val jsonObj = JSONObject(result)
                 val main = jsonObj.getJSONObject("main")
                 val sys = jsonObj.getJSONObject("sys")
                 val wind = jsonObj.getJSONObject("wind")
